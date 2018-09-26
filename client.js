@@ -8,13 +8,13 @@ function init(bundle, parent, options = {}) {
     // Add custom options here
     fullScreen: true,
     ...options,
-  });
+  })
 
   // Render your app content to the default cylinder surface
-  r360.renderToSurface(
+  r360.renderToLocation(
     r360.createRoot('TOMORROW_LAND', { /* initial props */ }),
-    r360.getDefaultSurface()
-  );
+    r360.getDefaultLocation()
+  )
 
   // Load the initial environment
   r360.compositor.setBackground(r360.getAssetURL('360_world3.jpg'));
