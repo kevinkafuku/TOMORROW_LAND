@@ -5,7 +5,8 @@ import {
   Text,
   View,
   Environment
-} from 'react-360';
+} from 'react-360'
+import Entity from 'Entity'
 
 export default class TOMORROW_LAND extends React.Component {
   constructor() {
@@ -13,7 +14,7 @@ export default class TOMORROW_LAND extends React.Component {
     this.state = {
       game: {
         name: 'Space Exploration',
-        world: 'https://s3.amazonaws.com/mernbook/vrGame/milkyway.jpg',
+        world: '/static_assets/360_world1.jpg',
         answerObjects: [
           {
             objUrl: 'https://s3.amazonaws.com/mernbook/vrGame/planet.obj',
@@ -42,7 +43,11 @@ export default class TOMORROW_LAND extends React.Component {
             color: 'white'
           }
         ]
-      }
+      },
+      vrObjects: [],
+      hide: 'none',
+      collectedNum: 0,
+      collectedList: []
     }
   }
   componentDidMount = () => {
@@ -52,14 +57,34 @@ export default class TOMORROW_LAND extends React.Component {
       {uri: this.state.game.world}
     )
   }
+  setModelStyles = (vrObject, index) => {
+    return {
+            display: this.state.collectedList[index] ? 'none' : 'flex',
+            color: vrObject.color,
+            transform: [
+              {translateX: vrObject.translateX},
+              {translateY: vrObject.translateY},
+              {translateZ: vrObject.translateZ},
+              {scale: vrObject.scale},
+              {rotateY: vrObject.rotateY},
+              {rotateX: vrObject.rotateX},
+              {rotateZ: vrObject.rotateZ}
+            ]
+          }
+  }
   render() {
     return (
-      <View style={styles.panel}>
-        <View style={styles.greetingBox}>
-          <Text style={styles.greeting}>
-            Welcome to Tomorrow Land
-          </Text>
-        </View>
+       <View>
+        {this.state.vrObjects.map((vrObject, i) => {
+            return (
+                      <Entity key={i} style={this.setModelStyles(vrObject, i)}
+                        source={{
+                          obj: {uri: vrObject.objUrl},
+                          mtl: {uri: vrObject.mtlUrl}
+                        }}
+                      />
+                  )
+        })}
       </View>
     );
   }
