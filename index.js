@@ -6,6 +6,7 @@ import {
   View,
   Environment,
   VrButton,
+  VrHeadModel,
   asset,
   NativeModules
 } from 'react-360'
@@ -51,7 +52,8 @@ export default class TOMORROW_LAND extends React.Component {
       vrObjects: [],
       hide: 'none',
       collectedNum: 0,
-      collectedList: []
+      collectedList: [],
+      hmMatrix: VrHeadModel.getHeadMatrix()
     }
   }
   componentDidMount = () => {
@@ -82,6 +84,7 @@ export default class TOMORROW_LAND extends React.Component {
       let updateCollectedList = this.state.collectedList;
       let updateCollectedNum = this.state.collectedNum + 1;
       updateCollectedList[match] = true;
+      this.checkGameCompleteStatus(updateCollectedNum);
       AudioModule.playOneShot({
           source: asset('collect.wav'),
       });
@@ -91,6 +94,24 @@ export default class TOMORROW_LAND extends React.Component {
         source: asset('wrong.wav'),
       });
     }
+  }
+  checkGameCompleteStatus = (collectedTotal) => {
+    if (collectedTotal == this.state.game.answerObjects.length) {
+      AudioModule.playEnvironmental({
+        source: asset('success.wav'),
+        loop: true
+      })
+      this.setState({hide: 'flex', hmMatrix: VrHeadModel.getHeadMatrix()});
+    }
+  }
+  setGameCompletedStyle = () => {
+    return {
+            position: 'absolute',
+            display: this.state.hide,
+            layoutOrigin: [0.5, 0.5],
+            width: 6,
+            transform: [{translate: [0, 0, 0]}, {matrix: this.state.hmMatrix}]
+          }
   }
   render() {
     return (
@@ -106,6 +127,17 @@ export default class TOMORROW_LAND extends React.Component {
                     </VrButton>
                   )
         })}
+          <View style={this.setGameCompletedStyle()}>
+          <View style={styles.completeMessage}>
+            <Text style={styles.congratsText}>CONGRATULATIONS !</Text>
+            <Text style={styles.collectedText}>You've Collected All The Objects In {this.state.game.name}</Text>
+          </View>
+          <VrButton onClick={this.exitGame}>
+            <View style={styles.button}>
+              <Text style={styles.buttonText}>Play Another Game ?</Text>
+            </View>
+          </VrButton>
+        </View>
       </View>
     );
   }
@@ -115,7 +147,7 @@ const styles = StyleSheet.create({
   completeMessage: {
     margin: 0.1,
     height: 1.5,
-    backgroundColor: 'green',
+    backgroundColor: 'red',
     transform: [ {translate: [0, 0, -5] } ]
   },
   congratsText: {
@@ -130,7 +162,7 @@ const styles = StyleSheet.create({
   button: {
     margin: 0.1,
     height: 0.5,
-    backgroundColor: 'blue',
+    backgroundColor: 'skyblue',
     transform: [ { translate: [0, 0, -5] } ]
   },
   buttonText: {
