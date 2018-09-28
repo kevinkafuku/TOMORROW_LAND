@@ -12,6 +12,7 @@ import {
 } from 'react-360'
 import Entity from 'Entity'
 const {AudioModule} = NativeModules
+const Location = NativeModules.Location
 
 export default class TOMORROW_LAND extends React.Component {
   constructor() {
@@ -19,7 +20,7 @@ export default class TOMORROW_LAND extends React.Component {
     this.state = {
       game: {
         name: 'Space Exploration',
-        world: '/static_assets/360_world1.jpg',
+        world: '/static_assets/360_world3.jpg',
         answerObjects: [
           {
             objUrl: 'https://s3.amazonaws.com/mernbook/vrGame/planet.obj',
@@ -55,6 +56,7 @@ export default class TOMORROW_LAND extends React.Component {
       collectedList: [],
       hmMatrix: VrHeadModel.getHeadMatrix()
     }
+    this.lastUpdate = Date.now()
   }
   componentDidMount = () => {
     let vrObjects = this.state.game.answerObjects.concat(this.state.game.wrongObjects)
@@ -113,6 +115,24 @@ export default class TOMORROW_LAND extends React.Component {
             transform: [{translate: [0, 0, 0]}, {matrix: this.state.hmMatrix}]
           }
   }
+  exitGame = () => {
+    Location.replace('/');
+  }
+  rotate = index => event => {
+    const now = Date.now();
+    const diff = now - this.lastUpdate;
+    const vrObjects = this.state.vrObjects;
+    vrObjects[index].rotateY = vrObjects[index].rotateY + diff / 200
+    this.lastUpdate = now;
+    this.setState({vrObjects: vrObjects});
+    this.requestID = requestAnimationFrame(this.rotate(index));
+  }
+  stopRotate = () => {
+    if (this.requestID) {
+      cancelAnimationFrame(this.requestID);
+      this.requestID = null;
+    }
+  }
   render() {
     return (
        <View>
@@ -123,6 +143,8 @@ export default class TOMORROW_LAND extends React.Component {
                           obj: {uri: vrObject.objUrl},
                           mtl: {uri: vrObject.mtlUrl}
                         }}
+                        onEnter={this.rotate(i)}
+                        onExit={this.stopRotate}
                       />
                     </VrButton>
                   )
@@ -134,7 +156,7 @@ export default class TOMORROW_LAND extends React.Component {
           </View>
           <VrButton onClick={this.exitGame}>
             <View style={styles.button}>
-              <Text style={styles.buttonText}>Play Another Game ?</Text>
+              <Text style={styles.buttonText}>Play Another Game.</Text>
             </View>
           </VrButton>
         </View>
