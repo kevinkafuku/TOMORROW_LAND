@@ -20,32 +20,44 @@ export default class TOMORROW_LAND extends React.Component {
     this.state = {
       game: {
         name: 'Space Exploration',
-        world: '/static_assets/360_world3.jpg',
+        world: '/static_assets/background.png',
         answerObjects: [
           {
-            objUrl: 'https://s3.amazonaws.com/mernbook/vrGame/planet.obj',
-            mtlUrl: 'https://s3.amazonaws.com/mernbook/vrGame/planet.mtl',
+            objUrl: 'https://s3.us-east-2.amazonaws.com/tomorrowland/tomorrowlandarcade/yamaha-yzr-r6.obj',
+            mtlUrl: 'https://s3.us-east-2.amazonaws.com/tomorrowland/tomorrowlandarcade/yamaha-yzr-r6.mtl',
             translateX: -50,
-            translateY: 0,
-            translateZ: 30,
+            translateY: 80,
+            translateZ: 300,
             rotateX: 0,
-            rotateY: 0,
+            rotateY: 16,
             rotateZ: 0,
-            scale: 7,
+            scale: 1,
+            color: 'white'
+          },
+          {
+            objUrl: 'https://s3.us-east-2.amazonaws.com/tomorrowland/tomorrowlandarcade/mp3Station.obj',
+            mtlUrl: 'https://s3.us-east-2.amazonaws.com/tomorrowland/tomorrowlandarcade/mp3Station.mtl',
+            translateX: -200,
+            translateY: 30,
+            translateZ: -300,
+            rotateX: 600,
+            rotateY: 0,
+            rotateZ: 600,
+            scale: 3,
             color: 'white'
           }
         ],
         wrongObjects: [
           {
-            objUrl: 'https://s3.amazonaws.com/mernbook/vrGame/tardis.obj',
-            mtlUrl: 'https://s3.amazonaws.com/mernbook/vrGame/tardis.mtl',
-            translateX: 0,
-            translateY: 0,
-            translateZ: 90,
+            objUrl: 'https://s3.us-east-2.amazonaws.com/tomorrowland/medicoscopia_bottle.obj',
+            mtlUrl: 'https://s3.us-east-2.amazonaws.com/tomorrowland/medicoscopia_bottle.mtl',
+            translateX: 600,
+            translateY: -75,
+            translateZ: -100,
             rotateX: 0,
-            rotateY: 20,
+            rotateY: 0,
             rotateZ: 0,
-            scale: 1,
+            scale: 14,
             color: 'white'
           }
         ]
